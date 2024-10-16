@@ -1,0 +1,27 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}{{ blog.title }}{% endblock %}
+
+{% block content %}
+<h2>{{ blog.title }}</h2>
+<p>{{ blog.content }}</p>
+
+<h3>Comments</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Comment</button>
+</form>
+
+{% for comment in blog.comments.all %}
+    <p>{{ comment.author }}: {{ comment.text }}</p>
+    <button data-comment-id="{{ comment.id }}" class="like-button">Like ({{ comment.like_count }})</button>
+{% endfor %}
+
+<!-- Share Blog Form -->
+<form method="post" action="{% url 'share-blog' blog.id %}">
+    {% csrf_token %}
+    <input type="email" name="email" placeholder="Recipient's email" required>
+    <button type="submit">Share this blog</button>
+</form>
+{% endblock %}
